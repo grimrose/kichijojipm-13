@@ -1,0 +1,117 @@
+@startuml
+
+package "サンプルシステム" as sample_system {
+
+    entity "登録イベントテーブル" as event {
+        + イベントID [PK]
+        --
+        # 管理番号ID [FK]
+        イベント発生日
+        備考
+        # 前イベントID [FK]
+        inserted_at
+    }
+
+    entity "登録イベント履歴テーブル" as event_history {
+        --
+        # イベントID [FK]
+        # 管理番号ID [FK]
+        イベント発生日
+        備考
+        # 前イベントID [FK]
+        inserted_at
+        updated_at
+    }
+
+    entity "登録イベントスナップショットテーブル" as event_snapshot {
+        --
+        # イベントID [FK]
+        # 管理番号ID [FK]
+        イベント発生日
+        備考
+        # 前イベントID [FK]
+        inserted_at
+        # スナップショットID [FK]
+        snapshot_at
+    }
+
+    entity "スナップショットIDテーブル" as snapshot {
+        + スナップショットID [PK]
+        --
+        イベント発生年月
+        inserted_at
+    }
+
+    entity "管理番号マスタ" as system_number {
+        + 管理番号ID [PK]
+        --
+        inserted_at
+    }
+
+    entity "管理番号明細マスタ" as system_number_detail {
+        + 管理番号ID [PK]
+        + 開始日 [PK]
+        --
+        # カテゴリID [FK]
+        管理番号
+        備考
+        終了日
+        inserted_at
+    }
+
+    entity "管理番号履歴テーブル" as system_number_history {
+        --
+        # 管理番号ID [FK]
+        開始日
+        # カテゴリID [FK]
+        管理番号
+        備考
+        終了日
+        inserted_at
+        updated_at
+    }
+
+    entity "カテゴリマスタ" as category {
+        + カテゴリID [PK]
+        --
+        inserted_at
+    }
+
+    entity "カテゴリ明細マスタ" as category_detail {
+        + カテゴリID [PK]
+        + 開始日 [PK]
+        --
+        名称
+        終了日
+        inserted_at
+    }
+
+    entity "カテゴリ履歴マスタ" as category_history {
+        --
+        # カテゴリID [FK]
+        開始日
+        名称
+        終了日
+        inserted_at
+        updated_at
+    }
+}
+
+event           --||    system_number
+event           --o{    event_history
+event_history   --||    system_number
+event           --o{    event_snapshot
+event_snapshot  --||    system_number
+
+system_number   --|{  system_number_detail
+system_number   --o{  system_number_history
+
+system_number_detail    --||  category
+system_number_history   --||  category
+
+category    --|{    category_detail
+category    --o{    category_history
+
+snapshot    --|{    event_snapshot
+
+@enduml

@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+
+  plantuml:
+    build: plantuml
+    networks:
+      - nw-plantuml
+
+networks:
+  nw-plantuml:
