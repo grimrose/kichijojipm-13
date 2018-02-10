@@ -27,3 +27,7 @@ make rise
 ```sh
 make start
 ```
+
+```sh
+exit
+```
